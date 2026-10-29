@@ -4,12 +4,23 @@
 .env
 .env.*
 !.env.example
+.envrc
 *.pem
 *.key
 *.pfx
 *.p12
-appsettings.*.local.json
+*.crt
+*.cer
+appsettings.[Ll]ocal.json
+appsettings.*.[Ll]ocal.json
 secrets.json
+
+# Docker Compose loads these automatically; they hold machine-specific ports
+# and credentials. Commit shared changes to compose.yaml instead.
+compose.override.yaml
+compose.override.yml
+docker-compose.override.yaml
+docker-compose.override.yml
 
 # Local databases and data dumps
 *.db
@@ -17,6 +28,7 @@ secrets.json
 *.sqlite
 *.sqlite3
 *.dump
+*.backup
 *.bak
 pgdata/
 
@@ -26,14 +38,17 @@ pgdata/
 node_modules/
 .next/
 out/
+dist/
 next-env.d.ts
 *.tsbuildinfo
 .vercel/
 .turbo/
+.eslintcache
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .pnp
 .pnp.*
 .yarn/*
@@ -42,22 +57,24 @@ pnpm-debug.log*
 !.yarn/releases
 !.yarn/versions
 
-# Test output
+# Test output and browser-test artifacts
 coverage/
 playwright-report/
 test-results/
 blob-report/
-playwright/.cache/
+**/playwright/.cache/
+# Saved sign-in state from Playwright setup projects contains session cookies.
+**/playwright/.auth/
 
 # ---------------------------------------------------------------------------
 # .NET (backend)
 # ---------------------------------------------------------------------------
-[Bb]in/
-[Oo]bj/
-[Dd]ebug/
-[Rr]elease/
-[Ll]og/
-[Ll]ogs/
+# Scoped to backend/ so that folders named bin, log or artifacts stay
+# available for source elsewhere in the monorepo.
+backend/**/[Bb]in/
+backend/**/[Oo]bj/
+backend/**/[Ll]ogs/
+backend/artifacts/
 TestResults/
 *.trx
 *.coverage
@@ -66,34 +83,52 @@ coverage*.json
 coverage*.xml
 *.nupkg
 *.snupkg
-artifacts/
 BenchmarkDotNet.Artifacts/
+# MSBuild binary logs record environment variables, which can include secrets.
+*.binlog
+# Repository-local SDK installs from dotnet-install scripts
+.dotnet/
 
 # ---------------------------------------------------------------------------
 # IDE and editor state
 # ---------------------------------------------------------------------------
 .vs/
 .idea/
+.fleet/
+*.iml
 *.user
 *.suo
+*.rsuser
 *.userprefs
-*.sln.iml
 *.DotSettings.user
 _ReSharper*/
-.vscode/*
-!.vscode/extensions.json
+**/.vscode/*
+!**/.vscode/extensions.json
+.history/
 *.code-workspace
 *.swp
+*.swo
 *~
+**/.claude/settings.local.json
 
 # ---------------------------------------------------------------------------
 # Operating systems
 # ---------------------------------------------------------------------------
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
 ehthumbs.db
-Desktop.ini
+[Dd]esktop.ini
 $RECYCLE.BIN/
+.directory
 
-# Logs
+# ---------------------------------------------------------------------------
+# Logs, caches and temporary files
+# ---------------------------------------------------------------------------
 *.log
+*.tmp
+*.temp
+.tmp/
+.cache/
