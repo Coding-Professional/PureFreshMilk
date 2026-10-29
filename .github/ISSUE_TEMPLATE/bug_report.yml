@@ -1,0 +1,48 @@
+name: Bug report
+description: Something doesn't work the way it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. **Security problems must not be reported here** — follow SECURITY.md instead.
+        Please don't paste real personal data (names, addresses, phone numbers) into this issue.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see, and what did you expect to see instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open /app/today
+        2. Tap "Delivered" for Recipient A
+        3. …
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Web app (apps/web)
+        - API (backend)
+        - Local setup / tooling
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and device, or OS with Node.js / .NET SDK versions (`node --version`, `dotnet --version`).
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Remove secrets and personal data before pasting.
+      render: text
