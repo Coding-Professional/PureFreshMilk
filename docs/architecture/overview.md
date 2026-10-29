@@ -1,6 +1,6 @@
 # Architecture overview
 
-Milk Manager records a household's daily milk deliveries. It will later work out charges,
+PureFreshMilk records a household's daily milk deliveries. It will later work out charges,
 payments and outstanding balances. This document describes how the code is organised and the rules
 that keep it that way. Decisions and their reasoning are recorded as
 [architecture decision records](decisions/README.md).

@@ -14,7 +14,7 @@ export function SiteFooter() {
         <div className="flex items-center gap-2.5">
           <BrandMark className="size-6" />
           <p>
-            Milk Manager is open source under the MIT License. Demo data on this site is synthetic.
+            PureFreshMilk is open source under the MIT License. Demo data on this site is synthetic.
           </p>
         </div>
         <nav aria-label="Footer">

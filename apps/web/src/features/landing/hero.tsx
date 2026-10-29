@@ -17,7 +17,7 @@ export function Hero() {
           Every morning&apos;s milk, measured to the millilitre.
         </h1>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-muted">
-          Milk Manager replaces the pencil marks on the kitchen calendar. Record what arrived for
+          PureFreshMilk replaces the pencil marks on the kitchen calendar. Record what arrived for
           each person at home and note the mornings the milk didn&apos;t come.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">

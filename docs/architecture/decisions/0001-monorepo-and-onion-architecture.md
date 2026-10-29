@@ -6,7 +6,7 @@
 
 ## Context
 
-Milk Manager needs a responsive web front end and a backend that will own money calculations
+PureFreshMilk needs a responsive web front end and a backend that will own money calculations
 (charges, payments, balances) and household-level data isolation. The project is small and
 open source, so contributors should be able to understand and run everything from one clone.
 Billing rules must stay testable and independent of the web framework and database.

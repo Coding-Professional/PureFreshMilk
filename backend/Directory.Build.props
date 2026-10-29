@@ -9,7 +9,7 @@
     <IsPackable>false</IsPackable>
 
     <Version>0.1.0</Version>
-    <Product>Milk Manager</Product>
-    <Authors>Milk Manager contributors</Authors>
+    <Product>PureFreshMilk</Product>
+    <Authors>PureFreshMilk contributors</Authors>
   </PropertyGroup>
 </Project>

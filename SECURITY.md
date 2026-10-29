@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Milk Manager is pre-release (0.x). Only the latest commit on `main` receives security fixes.
+PureFreshMilk is pre-release (0.x). Only the latest commit on `main` receives security fixes.
 
 ## Reporting a vulnerability
 

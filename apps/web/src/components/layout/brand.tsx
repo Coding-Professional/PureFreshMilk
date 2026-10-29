@@ -26,7 +26,7 @@ export function Brand({ href = "/", className }: { href?: string; className?: st
       className={cn("inline-flex min-h-11 items-center gap-2.5 rounded-lg", className)}
     >
       <BrandMark />
-      <span className="font-display text-lg font-bold tracking-tight text-ink">Milk Manager</span>
+      <span className="font-display text-lg font-bold tracking-tight text-ink">PureFreshMilk</span>
     </Link>
   );
 }

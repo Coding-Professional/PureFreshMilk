@@ -1,6 +1,6 @@
-# Milk Manager
+# PureFreshMilk
 
-Milk Manager keeps an exact record of a household's daily milk deliveries: who received how much,
+PureFreshMilk keeps an exact record of a household's daily milk deliveries: who received how much,
 and which mornings the milk didn't come. Monthly totals, charges, payments and outstanding
 balances come next.
 

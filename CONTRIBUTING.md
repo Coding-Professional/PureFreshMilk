@@ -1,4 +1,4 @@
-# Contributing to Milk Manager
+# Contributing to PureFreshMilk
 
 Thanks for helping. This guide covers how to propose changes and the rules that keep the code
 base consistent. By taking part you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).

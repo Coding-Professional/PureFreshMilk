@@ -19,9 +19,9 @@ const gabarito = Gabarito({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Milk Manager", template: "%s · Milk Manager" },
+  title: { default: "PureFreshMilk", template: "%s · PureFreshMilk" },
   description: "A simple, exact record of your household's daily milk deliveries.",
-  applicationName: "Milk Manager",
+  applicationName: "PureFreshMilk",
 };
 
 export const viewport: Viewport = {

@@ -13,7 +13,7 @@ export default function LoginPage() {
       footer={
         <>
           <p>
-            New to Milk Manager?{" "}
+            New to PureFreshMilk?{" "}
             <Link
               href="/signup"
               className="font-semibold text-accent underline-offset-4 hover:underline"

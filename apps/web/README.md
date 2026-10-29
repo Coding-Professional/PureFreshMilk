@@ -1,6 +1,6 @@
-# Milk Manager — web app
+# PureFreshMilk — web app
 
-Next.js (App Router) front end for Milk Manager. See the [root README](../../README.md), the
+Next.js (App Router) front end for PureFreshMilk. See the [root README](../../README.md), the
 [architecture overview](../../docs/architecture/overview.md#frontend) and
 [local development](../../docs/development.md).
 
