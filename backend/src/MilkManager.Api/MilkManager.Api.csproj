@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <!--
+    HTTP surface and composition root: endpoints, request/response contracts,
+    middleware and dependency-injection wiring.
+    References Application and Infrastructure. Endpoints call Application use cases;
+    Infrastructure is used only for registration (AddInfrastructure).
+  -->
+
+  <PropertyGroup>
+    <!-- Local development secrets (e.g. the connection string) live outside the repository. -->
+    <UserSecretsId>ad7fb305-23e1-4394-a575-fbbb5fd358a0</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MilkManager.Application\MilkManager.Application.csproj" />
+    <ProjectReference Include="..\MilkManager.Infrastructure\MilkManager.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <!-- Design-time only: lets `dotnet ef` use this project as the startup project. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
