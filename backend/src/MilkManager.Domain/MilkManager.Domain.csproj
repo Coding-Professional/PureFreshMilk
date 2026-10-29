@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Innermost layer: entities, value objects and business rules.
+    Must not reference any other MilkManager project or any framework package
+    (ASP.NET Core, EF Core, Npgsql, HTTP clients). Enforced by MilkManager.ArchitectureTests.
+  -->
+
+</Project>

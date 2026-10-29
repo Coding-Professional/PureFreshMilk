@@ -1,0 +1,15 @@
+<Project>
+  <!-- Settings shared by every project under backend/. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <IsPackable>false</IsPackable>
+
+    <Version>0.1.0</Version>
+    <Product>Milk Manager</Product>
+    <Authors>Milk Manager contributors</Authors>
+  </PropertyGroup>
+</Project>

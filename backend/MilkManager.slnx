@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MilkManager.Domain/MilkManager.Domain.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MilkManager.Domain.Tests/MilkManager.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
