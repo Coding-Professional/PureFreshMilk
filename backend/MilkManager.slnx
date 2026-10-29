@@ -7,6 +7,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/MilkManager.Api.Tests/MilkManager.Api.Tests.csproj" />
+    <Project Path="tests/MilkManager.ArchitectureTests/MilkManager.ArchitectureTests.csproj" />
     <Project Path="tests/MilkManager.Domain.Tests/MilkManager.Domain.Tests.csproj" />
   </Folder>
 </Solution>

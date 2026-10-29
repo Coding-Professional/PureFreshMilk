@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MilkManager.Domain\MilkManager.Domain.csproj" />
+    <ProjectReference Include="..\..\src\MilkManager.Application\MilkManager.Application.csproj" />
+    <ProjectReference Include="..\..\src\MilkManager.Infrastructure\MilkManager.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\MilkManager.Api\MilkManager.Api.csproj" />
+  </ItemGroup>
+
+</Project>
