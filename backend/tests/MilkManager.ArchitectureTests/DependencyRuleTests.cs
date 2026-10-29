@@ -35,9 +35,12 @@ public sealed class DependencyRuleTests
     [MemberData(nameof(AllowedProjectReferences))]
     public void Project_references_point_inwards_only(string project, string[] allowed)
     {
+        // The .csproj files write references with Windows separators, and Path only treats '\' as a
+        // separator on Windows, so normalise before taking the file name.
         var actual = ReadProjectFile(project)
             .Descendants("ProjectReference")
-            .Select(reference => Path.GetFileNameWithoutExtension((string)reference.Attribute("Include")!))
+            .Select(reference => Path.GetFileNameWithoutExtension(
+                ((string)reference.Attribute("Include")!).Replace('\\', '/')))
             .Order(StringComparer.Ordinal);
 
         Assert.Equal(allowed.Order(StringComparer.Ordinal), actual);
