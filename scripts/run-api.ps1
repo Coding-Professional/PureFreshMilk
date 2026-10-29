@@ -1,6 +1,6 @@
 # Runs the API against the local PostgreSQL container (compose.yaml).
 # Reads the database settings from the repository's .env file unless
-# ConnectionStrings__MilkManager is already set in the environment.
+# ConnectionStrings__PureFreshMilk is already set in the environment.
 #
 #   pwsh scripts/run-api.ps1        (or: powershell -File scripts\run-api.ps1)
 $ErrorActionPreference = "Stop"
@@ -15,7 +15,7 @@ function Get-EnvValue([string] $Key) {
     return $line.Substring($Key.Length + 1).Trim()
 }
 
-if (-not $env:ConnectionStrings__MilkManager) {
+if (-not $env:ConnectionStrings__PureFreshMilk) {
     if (-not (Test-Path $envFile)) {
         throw "No .env file found. Copy .env.example to .env and set POSTGRES_PASSWORD."
     }
@@ -23,14 +23,14 @@ if (-not $env:ConnectionStrings__MilkManager) {
     $password = Get-EnvValue "POSTGRES_PASSWORD"
     if (-not $password) { throw "POSTGRES_PASSWORD is empty in .env." }
 
-    $database = Get-EnvValue "POSTGRES_DB"; if (-not $database) { $database = "milkmanager" }
-    $user = Get-EnvValue "POSTGRES_USER"; if (-not $user) { $user = "milkmanager" }
+    $database = Get-EnvValue "POSTGRES_DB"; if (-not $database) { $database = "purefreshmilk" }
+    $user = Get-EnvValue "POSTGRES_USER"; if (-not $user) { $user = "purefreshmilk" }
     $port = Get-EnvValue "POSTGRES_PORT"; if (-not $port) { $port = "5432" }
 
-    $env:ConnectionStrings__MilkManager =
+    $env:ConnectionStrings__PureFreshMilk =
         "Host=localhost;Port=$port;Database=$database;Username=$user;Password=$password"
 }
 
 Set-Location (Join-Path $root "backend")
-dotnet run --project src/MilkManager.Api --launch-profile http @args
+dotnet run --project src/PureFreshMilk.Api --launch-profile http @args
 exit $LASTEXITCODE

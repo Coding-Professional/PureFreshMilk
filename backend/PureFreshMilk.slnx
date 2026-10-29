@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PureFreshMilk.Api/PureFreshMilk.Api.csproj" />
+    <Project Path="src/PureFreshMilk.Application/PureFreshMilk.Application.csproj" />
+    <Project Path="src/PureFreshMilk.Domain/PureFreshMilk.Domain.csproj" />
+    <Project Path="src/PureFreshMilk.Infrastructure/PureFreshMilk.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PureFreshMilk.Api.Tests/PureFreshMilk.Api.Tests.csproj" />
+    <Project Path="tests/PureFreshMilk.ArchitectureTests/PureFreshMilk.ArchitectureTests.csproj" />
+    <Project Path="tests/PureFreshMilk.Domain.Tests/PureFreshMilk.Domain.Tests.csproj" />
+  </Folder>
+</Solution>

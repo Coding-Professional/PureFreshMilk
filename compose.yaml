@@ -4,14 +4,14 @@
 #   cp .env.example .env        # then set POSTGRES_PASSWORD
 #   docker compose up -d --wait # starts PostgreSQL and waits until it is healthy
 #   docker compose down         # stops it (add --volumes to delete the data)
-name: milk-manager
+name: purefreshmilk
 
 services:
   postgres:
     image: postgres:18-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-milkmanager}
-      POSTGRES_USER: ${POSTGRES_USER:-milkmanager}
+      POSTGRES_DB: ${POSTGRES_DB:-purefreshmilk}
+      POSTGRES_USER: ${POSTGRES_USER:-purefreshmilk}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env (copy .env.example)}
     ports:
       # Bound to localhost only, so the database is not reachable from other machines.

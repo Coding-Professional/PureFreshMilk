@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    PostgreSQL persistence (EF Core), migrations and other external services.
+    References Application and Domain. Must not reference Api.
+    Persistence types are internal: other projects use AddInfrastructure() only.
+  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\PureFreshMilk.Application\PureFreshMilk.Application.csproj" />
+    <ProjectReference Include="..\PureFreshMilk.Domain\PureFreshMilk.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
+  </ItemGroup>
+
+</Project>

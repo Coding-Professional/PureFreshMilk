@@ -64,20 +64,20 @@ pwsh scripts/run-api.ps1          # Windows PowerShell 7 (or: powershell -File s
 
 ```bash
 cd backend
-dotnet user-secrets set "ConnectionStrings:MilkManager" \
-  "Host=localhost;Port=5432;Database=milkmanager;Username=milkmanager;Password=<your password>" \
-  --project src/MilkManager.Api
-dotnet run --project src/MilkManager.Api
+dotnet user-secrets set "ConnectionStrings:PureFreshMilk" \
+  "Host=localhost;Port=5432;Database=purefreshmilk;Username=purefreshmilk;Password=<your password>" \
+  --project src/PureFreshMilk.Api
+dotnet run --project src/PureFreshMilk.Api
 ```
 
-**C. Environment variable.** `ConnectionStrings__MilkManager=<connection string>`.
+**C. Environment variable.** `ConnectionStrings__PureFreshMilk=<connection string>`.
 
 Check it is up:
 
 ```bash
 curl http://localhost:5080/health/live     # Healthy — the process is running
 curl http://localhost:5080/health/ready    # Healthy — PostgreSQL is reachable (Unhealthy if not)
-curl http://localhost:5080/api/v1/status   # {"service":"milk-manager-api","version":"0.1.0",...}
+curl http://localhost:5080/api/v1/status   # {"service":"purefreshmilk-api","version":"0.1.0",...}
 ```
 
 The API starts without a running database. Only `/health/ready` reports the database.
@@ -87,8 +87,8 @@ The API starts without a running database. Only `/health/ready` reports the data
 | Variable | Where | Required | Purpose |
 | --- | --- | --- | --- |
 | `POSTGRES_PASSWORD` | `.env` (root) | Yes, for Compose | Password for the local database container |
-| `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PORT` | `.env` (root) | No | Default to `milkmanager`, `milkmanager`, `5432` |
-| `ConnectionStrings__MilkManager` | Environment or user secrets | Yes, for the API | Npgsql connection string |
+| `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PORT` | `.env` (root) | No | Default to `purefreshmilk`, `purefreshmilk`, `5432` |
+| `ConnectionStrings__PureFreshMilk` | Environment or user secrets | Yes, for the API | Npgsql connection string |
 | `Cors__AllowedOrigins__0` (…`__1`, …) | Environment | No | Web origins allowed to call the API. Development allows `http://localhost:3000` |
 | `NEXT_PUBLIC_API_BASE_URL` | `apps/web/.env.local` | No | API base URL for the web app. It is inlined into the browser bundle, so never put secrets in it |
 
@@ -108,9 +108,9 @@ Or one at a time:
 
 ```bash
 # Backend (from backend/)
-dotnet format MilkManager.slnx --verify-no-changes
-dotnet build MilkManager.slnx                 # warnings are errors
-dotnet test --solution MilkManager.slnx       # Microsoft.Testing.Platform (see global.json)
+dotnet format PureFreshMilk.slnx --verify-no-changes
+dotnet build PureFreshMilk.slnx                 # warnings are errors
+dotnet test --solution PureFreshMilk.slnx       # Microsoft.Testing.Platform (see global.json)
 
 # Web (from apps/web/)
 npm run format:check
@@ -123,10 +123,10 @@ npm run test:e2e                              # builds, serves on :3100, runs br
 
 Backend test projects:
 
-- `MilkManager.Domain.Tests`: domain rules such as `Quantity`.
-- `MilkManager.Api.Tests`: the HTTP pipeline in memory (status endpoint, health checks, Problem
+- `PureFreshMilk.Domain.Tests`: domain rules such as `Quantity`.
+- `PureFreshMilk.Api.Tests`: the HTTP pipeline in memory (status endpoint, health checks, Problem
   Details, CORS, fail-fast configuration). They need no database.
-- `MilkManager.ArchitectureTests`: the layer dependency rules.
+- `PureFreshMilk.ArchitectureTests`: the layer dependency rules.
 
 ## Database migrations
 
@@ -138,23 +138,23 @@ cd backend
 dotnet tool restore              # installs dotnet-ef from dotnet-tools.json
 # The API host is used as the startup project, so a connection string must be configured (step 3).
 dotnet ef migrations add <Name> \
-  --project src/MilkManager.Infrastructure \
-  --startup-project src/MilkManager.Api \
+  --project src/PureFreshMilk.Infrastructure \
+  --startup-project src/PureFreshMilk.Api \
   --output-dir Persistence/Migrations
 dotnet ef database update \
-  --project src/MilkManager.Infrastructure \
-  --startup-project src/MilkManager.Api
+  --project src/PureFreshMilk.Infrastructure \
+  --startup-project src/PureFreshMilk.Api
 ```
 
 ## Troubleshooting
 
-- **`Connection string 'MilkManager' is not configured`**: provide it using one of the options in step 3.
+- **`Connection string 'PureFreshMilk' is not configured`**: provide it using one of the options in step 3.
 - **`required variable POSTGRES_PASSWORD is missing a value`**: create `.env` from `.env.example`
   and set a password.
 - **`/health/ready` returns `Unhealthy`**: the database isn't running or the credentials don't
   match. Check `docker compose ps` and your `.env`.
 - **Port already in use**: change `POSTGRES_PORT` in `.env`, run the web app with
-  `npm run dev -- --port 3001`, or edit `backend/src/MilkManager.Api/Properties/launchSettings.json`.
+  `npm run dev -- --port 3001`, or edit `backend/src/PureFreshMilk.Api/Properties/launchSettings.json`.
   If you change the web port, also allow the new origin in the API's CORS settings.
 - **Settings shows "No API address is set"**: create `apps/web/.env.local` from `.env.example` and
   restart the dev server.

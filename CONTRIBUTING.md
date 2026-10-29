@@ -39,7 +39,7 @@ reviewers check most often:
 **Backend**
 
 - Dependencies point inwards: Api → Application/Infrastructure, Infrastructure → Application/Domain,
-  Application → Domain. `MilkManager.ArchitectureTests` enforces this; don't weaken it to make a
+  Application → Domain. `PureFreshMilk.ArchitectureTests` enforces this; don't weaken it to make a
   change compile.
 - Business rules and every calculation involving quantities or money live in Domain or Application.
   Never put them in endpoints, and never in the web app.
@@ -63,8 +63,8 @@ a change to how billing or authentication works) need an
 
 ## Tests
 
-- Backend: xUnit v3. Put domain rules in `MilkManager.Domain.Tests` and the HTTP behaviour in
-  `MilkManager.Api.Tests`.
+- Backend: xUnit v3. Put domain rules in `PureFreshMilk.Domain.Tests` and the HTTP behaviour in
+  `PureFreshMilk.Api.Tests`.
 - Web: Vitest + Testing Library for units and components; Playwright for routes, layout and
   accessibility.
 - Bug fixes should come with a test that fails without the fix.

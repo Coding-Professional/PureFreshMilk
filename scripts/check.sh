@@ -11,10 +11,10 @@ step() { printf '\n==> %s\n' "$*"; }
 
 step "Backend: restore, format, build, test"
 cd "$root/backend"
-dotnet restore MilkManager.slnx
-dotnet format MilkManager.slnx --verify-no-changes --no-restore
-dotnet build MilkManager.slnx --configuration Release --no-restore
-dotnet test --solution MilkManager.slnx --configuration Release --no-build
+dotnet restore PureFreshMilk.slnx
+dotnet format PureFreshMilk.slnx --verify-no-changes --no-restore
+dotnet build PureFreshMilk.slnx --configuration Release --no-restore
+dotnet test --solution PureFreshMilk.slnx --configuration Release --no-build
 
 step "Web: format, lint, types, unit tests, build"
 cd "$root/apps/web"

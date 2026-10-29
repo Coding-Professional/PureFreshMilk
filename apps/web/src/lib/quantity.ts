@@ -1,6 +1,6 @@
 /**
  * Display helpers for milk quantities. Quantities are always whole millilitres,
- * matching MilkManager.Domain's Quantity value object.
+ * matching PureFreshMilk.Domain's Quantity value object.
  */
 
 export const MILLILITRES_PER_LITRE = 1000;

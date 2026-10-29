@@ -25,14 +25,14 @@ flowchart LR
 
 ## Backend: Onion Architecture
 
-The solution `backend/MilkManager.slnx` has four projects. Dependencies point **inwards only**:
+The solution `backend/PureFreshMilk.slnx` has four projects. Dependencies point **inwards only**:
 
 ```mermaid
 flowchart TD
-  Api["MilkManager.Api<br/><i>endpoints, contracts, middleware, DI composition</i>"]
-  Infrastructure["MilkManager.Infrastructure<br/><i>EF Core, PostgreSQL, migrations, external services</i>"]
-  Application["MilkManager.Application<br/><i>use cases, interfaces, validation</i>"]
-  Domain["MilkManager.Domain<br/><i>entities, value objects, rules</i>"]
+  Api["PureFreshMilk.Api<br/><i>endpoints, contracts, middleware, DI composition</i>"]
+  Infrastructure["PureFreshMilk.Infrastructure<br/><i>EF Core, PostgreSQL, migrations, external services</i>"]
+  Application["PureFreshMilk.Application<br/><i>use cases, interfaces, validation</i>"]
+  Domain["PureFreshMilk.Domain<br/><i>entities, value objects, rules</i>"]
 
   Api --> Application
   Api --> Infrastructure
@@ -43,19 +43,19 @@ flowchart TD
 
 | Project | Contains | May reference | Must not reference |
 | --- | --- | --- | --- |
-| `MilkManager.Domain` | Entities, value objects (e.g. `Quantity`), enums, business rules, `DomainException` | Nothing (base class library only) | Any other project, ASP.NET Core, EF Core, Npgsql, HTTP or database libraries |
-| `MilkManager.Application` | Use-case handlers, interfaces that Infrastructure implements, validation, orchestration | Domain; `Microsoft.Extensions.DependencyInjection.Abstractions` | Infrastructure, Api, ASP.NET Core, EF Core, Npgsql |
-| `MilkManager.Infrastructure` | `MilkManagerDbContext`, entity configurations, migrations, repository implementations, external services | Application, Domain | Api |
-| `MilkManager.Api` | Minimal-API endpoints, request/response DTOs, middleware, configuration, DI wiring | Application, Infrastructure | — |
+| `PureFreshMilk.Domain` | Entities, value objects (e.g. `Quantity`), enums, business rules, `DomainException` | Nothing (base class library only) | Any other project, ASP.NET Core, EF Core, Npgsql, HTTP or database libraries |
+| `PureFreshMilk.Application` | Use-case handlers, interfaces that Infrastructure implements, validation, orchestration | Domain; `Microsoft.Extensions.DependencyInjection.Abstractions` | Infrastructure, Api, ASP.NET Core, EF Core, Npgsql |
+| `PureFreshMilk.Infrastructure` | `PureFreshMilkDbContext`, entity configurations, migrations, repository implementations, external services | Application, Domain | Api |
+| `PureFreshMilk.Api` | Minimal-API endpoints, request/response DTOs, middleware, configuration, DI wiring | Application, Infrastructure | — |
 
 ### How the rules are enforced
 
 1. **Project references.** A layer cannot use a type from a project it does not reference.
    Because project references can't be circular, the compiler also stops inner layers reaching outwards.
-2. **Internal persistence.** `MilkManagerDbContext` and future repositories are `internal` to
+2. **Internal persistence.** `PureFreshMilkDbContext` and future repositories are `internal` to
    Infrastructure. The Api references Infrastructure only to call `AddInfrastructure(...)`, so
    endpoints *cannot* query the database directly; they must go through an Application use case.
-3. **Architecture tests** (`backend/tests/MilkManager.ArchitectureTests`) fail the build in CI if:
+3. **Architecture tests** (`backend/tests/PureFreshMilk.ArchitectureTests`) fail the build in CI if:
    - any `.csproj` gains a `ProjectReference` outside the allowed graph above,
    - Domain gains any package reference, or its compiled assembly references anything beyond the BCL,
    - the Application assembly references Infrastructure, Api, ASP.NET Core, EF Core or Npgsql,
@@ -93,7 +93,7 @@ DTO. Business calculations belong in Domain or Application, never in an endpoint
 - **Persistence.** For the first persisted entity:
   1. Model it in Domain.
   2. Add an `IEntityTypeConfiguration<T>` under `Infrastructure/Persistence/Configurations/`.
-  3. Call `modelBuilder.ApplyConfigurationsFromAssembly(...)` in `MilkManagerDbContext.OnModelCreating`.
+  3. Call `modelBuilder.ApplyConfigurationsFromAssembly(...)` in `PureFreshMilkDbContext.OnModelCreating`.
      This was left out deliberately while there are no configurations, because EF Core logs a warning when it finds none.
   4. Expose it through an interface declared in Application and implemented (internally) in Infrastructure.
   5. Add a migration (commands in [development.md](../development.md#database-migrations)).
@@ -106,7 +106,7 @@ DTO. Business calculations belong in Domain or Application, never in an endpoint
 | `GET /health/live` | The process is running | None |
 | `GET /health/ready` | The API can serve traffic | PostgreSQL connection (EF Core `CanConnectAsync`) |
 
-The API fails at start-up with a clear message if `ConnectionStrings:MilkManager` is missing.
+The API fails at start-up with a clear message if `ConnectionStrings:PureFreshMilk` is missing.
 
 ## Data and API boundaries
 
@@ -166,7 +166,7 @@ Rules:
 
 | Area | State |
 | --- | --- |
-| Persistence | `MilkManagerDbContext` exists with no entities and no migrations. |
+| Persistence | `PureFreshMilkDbContext` exists with no entities and no migrations. |
 | Recipients, deliveries, history, month view | Web screens are placeholders or demo-data prototypes. No API endpoints. |
 | Billing: prices, charges, payments, balances | Not started. Will be server-side only. |
 | Authentication and households | Not started. Login and sign-up are disabled previews. |

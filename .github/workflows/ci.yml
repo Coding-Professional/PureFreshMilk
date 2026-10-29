@@ -65,11 +65,11 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - run: dotnet restore MilkManager.slnx
-      - run: dotnet format MilkManager.slnx --verify-no-changes --no-restore
+      - run: dotnet restore PureFreshMilk.slnx
+      - run: dotnet format PureFreshMilk.slnx --verify-no-changes --no-restore
       # Directory.Build.props sets TreatWarningsAsErrors, so warnings fail the build.
-      - run: dotnet build MilkManager.slnx --configuration Release --no-restore
-      - run: dotnet test --solution MilkManager.slnx --configuration Release --no-build
+      - run: dotnet build PureFreshMilk.slnx --configuration Release --no-restore
+      - run: dotnet test --solution PureFreshMilk.slnx --configuration Release --no-build
 
   database:
     name: Database — Compose PostgreSQL + API readiness
@@ -90,15 +90,15 @@ jobs:
 
       - name: Build API
         working-directory: backend
-        run: dotnet build src/MilkManager.Api --configuration Release
+        run: dotnet build src/PureFreshMilk.Api --configuration Release
 
       - name: Start the API and wait until /health/ready is healthy
         working-directory: backend
         env:
-          ConnectionStrings__MilkManager: Host=localhost;Port=5432;Database=milkmanager;Username=milkmanager;Password=${{ env.POSTGRES_PASSWORD }}
+          ConnectionStrings__PureFreshMilk: Host=localhost;Port=5432;Database=purefreshmilk;Username=purefreshmilk;Password=${{ env.POSTGRES_PASSWORD }}
           ASPNETCORE_URLS: http://127.0.0.1:5080
         run: |
-          dotnet run --project src/MilkManager.Api --configuration Release --no-build --no-launch-profile > api.log 2>&1 &
+          dotnet run --project src/PureFreshMilk.Api --configuration Release --no-build --no-launch-profile > api.log 2>&1 &
           for attempt in $(seq 1 30); do
             if curl --fail --silent http://127.0.0.1:5080/health/ready; then
               echo

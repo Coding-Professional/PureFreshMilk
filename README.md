@@ -23,11 +23,11 @@ balances come next.
 
 ```text
 apps/web/                 Next.js web app
-backend/                  ASP.NET Core solution (MilkManager.slnx)
-  src/MilkManager.Domain/           Entities, value objects, business rules
-  src/MilkManager.Application/      Use cases and the interfaces they need
-  src/MilkManager.Infrastructure/   PostgreSQL / EF Core persistence
-  src/MilkManager.Api/              HTTP endpoints, contracts, composition root
+backend/                  ASP.NET Core solution (PureFreshMilk.slnx)
+  src/PureFreshMilk.Domain/           Entities, value objects, business rules
+  src/PureFreshMilk.Application/      Use cases and the interfaces they need
+  src/PureFreshMilk.Infrastructure/   PostgreSQL / EF Core persistence
+  src/PureFreshMilk.Api/              HTTP endpoints, contracts, composition root
   tests/                            Domain, API and architecture tests
 docs/                     Architecture overview, decision records, local development guide
 scripts/                  Local check and run helpers (Bash and PowerShell)

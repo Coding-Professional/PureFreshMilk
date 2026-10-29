@@ -11,7 +11,7 @@ afterEach(() => vi.mocked(getApiStatus).mockReset());
 describe("ApiStatusCard", () => {
   it("shows the API version when connected", async () => {
     vi.mocked(getApiStatus).mockResolvedValue({
-      service: "milk-manager-api",
+      service: "purefreshmilk-api",
       version: "0.1.0",
       serverTime: "2026-01-15T06:30:00Z",
     });
@@ -19,7 +19,7 @@ describe("ApiStatusCard", () => {
     render(<ApiStatusCard />);
 
     expect(await screen.findByText("Connected")).toBeInTheDocument();
-    expect(screen.getByText(/milk-manager-api 0\.1\.0/)).toBeInTheDocument();
+    expect(screen.getByText(/purefreshmilk-api 0\.1\.0/)).toBeInTheDocument();
   });
 
   it("explains how to fix a missing API address", async () => {

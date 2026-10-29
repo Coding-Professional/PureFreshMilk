@@ -17,10 +17,10 @@ function Invoke-Checked([string] $Command) {
 
 Write-Host "`n==> Backend: restore, format, build, test"
 Set-Location (Join-Path $root "backend")
-Invoke-Checked "dotnet restore MilkManager.slnx"
-Invoke-Checked "dotnet format MilkManager.slnx --verify-no-changes --no-restore"
-Invoke-Checked "dotnet build MilkManager.slnx --configuration Release --no-restore"
-Invoke-Checked "dotnet test --solution MilkManager.slnx --configuration Release --no-build"
+Invoke-Checked "dotnet restore PureFreshMilk.slnx"
+Invoke-Checked "dotnet format PureFreshMilk.slnx --verify-no-changes --no-restore"
+Invoke-Checked "dotnet build PureFreshMilk.slnx --configuration Release --no-restore"
+Invoke-Checked "dotnet test --solution PureFreshMilk.slnx --configuration Release --no-build"
 
 Write-Host "`n==> Web: format, lint, types, unit tests, build"
 Set-Location (Join-Path $root "apps/web")

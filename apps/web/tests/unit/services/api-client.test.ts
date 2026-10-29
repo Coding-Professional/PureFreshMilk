@@ -39,7 +39,7 @@ describe("apiGet", () => {
   it("requests JSON under /api/v1 and returns the body", async () => {
     vi.stubEnv("NEXT_PUBLIC_API_BASE_URL", "http://localhost:5080");
     const body = {
-      service: "milk-manager-api",
+      service: "purefreshmilk-api",
       version: "0.1.0",
       serverTime: "2026-01-15T06:30:00Z",
     };
