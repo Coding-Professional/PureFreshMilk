@@ -59,9 +59,21 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-**[CONTACT EMAIL — to be added by the maintainer]**.
+reported to the community leaders responsible for enforcement.
+**A private contact for conduct reports has not been published yet.** Until it
+is, please do not describe an incident in a public issue, pull request or
+comment. Open an issue that says only that you need a private conduct contact,
+without any details about the incident, so that a maintainer can arrange a
+private channel.
 All complaints will be reviewed and investigated promptly and fairly.
+
+<!--
+  MAINTAINER ACTION REQUIRED before public release:
+  Replace the paragraph above with a private contact that you control and monitor, for
+  example a project mailbox. Do not use a personal address unless you intend to publish it.
+  GitHub's private vulnerability reporting is for security issues; do not point conduct
+  reports at it. Then delete this comment.
+-->
 
 All community leaders are obligated to respect the privacy and security of the
 reporter of any incident.

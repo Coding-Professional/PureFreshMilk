@@ -1,0 +1,58 @@
+# Dependabot version updates. The related GitHub settings (dependency graph, alerts and
+# security updates) are not stored in this file; see docs/github-settings.md.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /apps/web
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # next and eslint-config-next are pinned to the same exact version in package.json.
+      nextjs:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+    ignore:
+      # Major versions are adopted deliberately. ESLint 10 is not yet supported by
+      # eslint-plugin-import, eslint-plugin-jsx-a11y and eslint-plugin-react, which
+      # eslint-config-next installs. Minor and patch updates still arrive.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: nuget
+    directory: /backend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # dotnet-ef (backend/dotnet-tools.json) must match the EF Core version, and the Npgsql
+      # provider requires a minimum EF Core version, so these move together.
+      efcore-aspnetcore-extensions:
+        patterns:
+          - "Microsoft.EntityFrameworkCore*"
+          - "Npgsql.EntityFrameworkCore.*"
+          - "Microsoft.AspNetCore.*"
+          - "Microsoft.Extensions.*"
+          - "dotnet-ef"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
