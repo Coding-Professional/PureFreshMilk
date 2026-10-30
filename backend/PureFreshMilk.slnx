@@ -9,6 +9,7 @@
     <Project Path="tests/PureFreshMilk.Api.Tests/PureFreshMilk.Api.Tests.csproj" />
     <Project Path="tests/PureFreshMilk.Application.Tests/PureFreshMilk.Application.Tests.csproj" />
     <Project Path="tests/PureFreshMilk.ArchitectureTests/PureFreshMilk.ArchitectureTests.csproj" />
+    <Project Path="tests/PureFreshMilk.Infrastructure.Tests/PureFreshMilk.Infrastructure.Tests.csproj" />
     <Project Path="tests/PureFreshMilk.Domain.Tests/PureFreshMilk.Domain.Tests.csproj" />
     <Project Path="tests/PureFreshMilk.TestSupport/PureFreshMilk.TestSupport.csproj" />
   </Folder>
