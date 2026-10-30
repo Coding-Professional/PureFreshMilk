@@ -53,6 +53,12 @@ public sealed class Recipient
     public void Update(string? name, Quantity expectedQuantity, DateOnly startsOn, DateTimeOffset now) =>
         Apply(name, expectedQuantity, startsOn, now);
 
+    /// <summary>
+    /// The name as it will be stored (trimmed), or a rule violation if it is not a valid name. Lets a caller
+    /// compare names, for example to look for a duplicate, before changing anything.
+    /// </summary>
+    public static string NormalizeName(string? name) => NameRules.Require(name, "name", "The recipient's name");
+
     /// <summary>Stops deliveries from <paramref name="from"/> onwards. The days before it keep their history.</summary>
     public void Archive(DateOnly from, DateTimeOffset now)
     {
@@ -94,7 +100,7 @@ public sealed class Recipient
     private void Apply(string? name, Quantity expectedQuantity, DateOnly startsOn, DateTimeOffset now)
     {
         // Check everything before changing anything, so a rejected update leaves the recipient as it was.
-        var validName = NameRules.Require(name, "name", "The recipient's name");
+        var validName = NormalizeName(name);
 
         if (expectedQuantity.Millilitres is < MinExpectedMillilitres or > MaxExpectedMillilitres)
         {
