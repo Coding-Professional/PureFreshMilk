@@ -269,6 +269,35 @@ public sealed class RecipientHandlerTests
         Assert.Equal(TestHousehold.Today, Assert.Single(app.Database.Recipients).ArchivedFrom);
     }
 
+    [Theory]
+    [Trait("Invariant", "R-5")]
+    [InlineData("2026-10-30", "2026-10-31")] // starts today: active for one day, so archived from tomorrow
+    [InlineData("2026-10-29", "2026-10-30")] // started yesterday: archived from today
+    [InlineData("2026-10-01", "2026-10-30")]
+    [InlineData("2026-11-05", "2026-11-06")] // starts in the future: archived the day after it starts
+    public async Task Archiving_by_default_leaves_the_recipient_active_for_at_least_one_day(string startsOn, string expected)
+    {
+        var app = await TestHousehold.SetUpAsync();
+        var added = await app.AddRecipientAsync(
+            "Recipient A", startsOn: DateOnly.Parse(startsOn, System.Globalization.CultureInfo.InvariantCulture));
+
+        var archived = await app.ArchiveRecipient.HandleAsync(new ArchiveRecipientCommand(added.Id, null), Ct);
+
+        Assert.Equal(DateOnly.Parse(expected, System.Globalization.CultureInfo.InvariantCulture), archived.ArchivedFrom);
+    }
+
+    [Fact]
+    public async Task Archiving_a_recipient_who_starts_on_the_last_representable_day_is_rejected_not_a_crash()
+    {
+        var app = await TestHousehold.SetUpAsync();
+        var added = await app.AddRecipientAsync("Recipient A", startsOn: DateOnly.MaxValue);
+
+        var exception = await Assert.ThrowsAsync<DomainException>(
+            () => app.ArchiveRecipient.HandleAsync(new ArchiveRecipientCommand(added.Id, null), Ct));
+
+        Assert.Equal("archivedFrom", exception.Field);
+    }
+
     [Fact]
     public async Task Archiving_can_name_the_day()
     {

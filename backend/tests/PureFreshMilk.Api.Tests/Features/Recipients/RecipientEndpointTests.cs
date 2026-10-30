@@ -213,6 +213,18 @@ public sealed class RecipientEndpointTests(PureFreshMilkApiFactory factory) : IC
     }
 
     [Fact]
+    public async Task Archiving_a_recipient_added_today_archives_from_tomorrow_because_they_are_active_for_a_day()
+    {
+        using var client = await StartWithHouseholdAsync();
+        var added = await client.AddRecipientAsync("Recipient A"); // starts today, 30 October
+
+        var response = await client.PostAsync($"/api/v1/recipients/{added.GetProperty("id").GetGuid()}/archive", content: null, Ct);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("2026-10-31", (await response.ReadAsync()).GetProperty("archivedFrom").GetString());
+    }
+
+    [Fact]
     public async Task Archiving_can_name_the_day()
     {
         using var client = await StartWithHouseholdAsync();
