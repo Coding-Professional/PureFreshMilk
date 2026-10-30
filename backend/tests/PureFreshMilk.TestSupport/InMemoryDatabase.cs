@@ -39,5 +39,15 @@ public sealed class InMemoryDatabase : IUnitOfWork
     /// <summary>Forgets earlier saves, so a test can check that the step under test saved (or did not save).</summary>
     public void ResetSaveCount() => SaveCount = 0;
 
+    /// <summary>Empties the database, so tests that share a host start from nothing.</summary>
+    public void Clear()
+    {
+        Households.Clear();
+        Recipients.Clear();
+        MilkRates.Clear();
+        pendingChanges.Clear();
+        SaveCount = 0;
+    }
+
     internal void StageChange(Action change) => pendingChanges.Add(change);
 }
