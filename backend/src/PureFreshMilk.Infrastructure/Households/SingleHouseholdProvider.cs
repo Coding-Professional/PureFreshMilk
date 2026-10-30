@@ -21,7 +21,7 @@ internal sealed class SingleHouseholdProvider(PureFreshMilkDbContext context) : 
         }
 
         // Ask for two so that a second household is noticed rather than silently ignored.
-        var found = await context.Households.Take(2).ToListAsync(cancellationToken);
+        var found = await context.Households.OrderBy(candidate => candidate.Id).Take(2).ToListAsync(cancellationToken);
 
         if (found.Count > 1)
         {
