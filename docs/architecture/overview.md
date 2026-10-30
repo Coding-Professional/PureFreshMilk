@@ -164,11 +164,16 @@ Rules:
 
 ## What is not implemented yet
 
+The model for the next slice (households, recipients, milk rates and daily deliveries) is proposed
+in [ADR 0004](decisions/0004-domain-model-for-household-deliveries.md), with the tables and the
+invariants that need tests in [Domain model](domain-model.md) and the build order in the
+[slice 1 plan](../plans/slice-1-recipients-and-deliveries.md).
+
 | Area | State |
 | --- | --- |
-| Persistence | `PureFreshMilkDbContext` exists with no entities and no migrations. |
+| Persistence | `PureFreshMilkDbContext` exists with no entities and no migrations. The first model is designed, not built. |
 | Recipients, deliveries, history, month view | Web screens are placeholders or demo-data prototypes. No API endpoints. |
-| Billing: prices, charges, payments, balances | Not started. Will be server-side only. |
+| Billing: prices, charges, payments, balances | Not started. Will be server-side only. Money is designed as whole paise in ADR 0004. |
 | Authentication and households | Not started. Login and sign-up are disabled previews. |
 | Household data isolation | Designed (above), not built. |
 | Deployment, TLS termination, forwarded headers, rate limiting | Not decided. No hosting target yet. |

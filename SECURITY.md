@@ -8,8 +8,20 @@ PureFreshMilk is pre-release (0.x). Only the latest commit on `main` receives se
 
 **Please do not report security vulnerabilities through public issues, discussions or pull requests.**
 
-Report them privately through GitHub's private vulnerability reporting: open the repository's
-**Security** tab and choose **Report a vulnerability**.
+Report them privately through GitHub Security Advisories (GitHub's private vulnerability
+reporting):
+
+1. Open the [Security tab](https://github.com/Coding-Professional/PureFreshMilk/security).
+2. Choose **Advisories**, then **Report a vulnerability**. The direct link is
+   <https://github.com/Coding-Professional/PureFreshMilk/security/advisories/new>.
+3. Fill in the form and submit it.
+
+Only you and the project maintainers can see the report.
+
+If there is no **Report a vulnerability** button, private reporting is not available on the
+repository right now. Do not post details publicly. Open an issue that says only that you need a
+private security contact, without any technical detail, so that a maintainer can arrange a
+private channel.
 
 Please include:
 
