@@ -43,6 +43,10 @@ export default defineConfig({
     command: isCI
       ? `npm run start -- --port ${port}`
       : `npm run build && npm run start -- --port ${port}`,
+    // These tests cover the app with no API address, where the Recipients and Settings screens say so
+    // and show labelled demo data. Pin it, so a developer's .env.local cannot change what is tested.
+    // (CI builds earlier, in a clean checkout.)
+    env: { NEXT_PUBLIC_API_BASE_URL: "" },
     url: baseURL,
     reuseExistingServer: !isCI,
     timeout: 240_000,

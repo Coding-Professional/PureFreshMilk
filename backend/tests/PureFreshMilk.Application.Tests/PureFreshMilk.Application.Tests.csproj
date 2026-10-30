@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PureFreshMilk.Application\PureFreshMilk.Application.csproj" />
+    <ProjectReference Include="..\..\src\PureFreshMilk.Domain\PureFreshMilk.Domain.csproj" />
+    <ProjectReference Include="..\PureFreshMilk.TestSupport\PureFreshMilk.TestSupport.csproj" />
+  </ItemGroup>
+
+</Project>
