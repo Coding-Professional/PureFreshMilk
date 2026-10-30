@@ -69,7 +69,9 @@ jobs:
       - run: dotnet format PureFreshMilk.slnx --verify-no-changes --no-restore
       # Directory.Build.props sets TreatWarningsAsErrors, so warnings fail the build.
       - run: dotnet build PureFreshMilk.slnx --configuration Release --no-restore
-      - run: dotnet test --solution PureFreshMilk.slnx --configuration Release --no-build
+      # Tests that need PostgreSQL are tagged Category=Database and run in the database job. The test
+      # project that holds only those is left with no tests, which ends with exit code 8 ("zero tests ran").
+      - run: dotnet test --solution PureFreshMilk.slnx --configuration Release --no-build --filter-not-trait "Category=Database" --ignore-exit-code 8
 
   database:
     name: Database — Compose PostgreSQL + API readiness
@@ -92,24 +94,46 @@ jobs:
         working-directory: backend
         run: dotnet build src/PureFreshMilk.Api --configuration Release
 
-      - name: Start the API and wait until /health/ready is healthy
+      - name: Apply the migrations to the empty database
+        working-directory: backend
+        env:
+          ConnectionStrings__PureFreshMilk: Host=localhost;Port=5432;Database=purefreshmilk;Username=purefreshmilk;Password=${{ env.POSTGRES_PASSWORD }}
+        run: |
+          dotnet tool restore
+          dotnet ef database update --project src/PureFreshMilk.Infrastructure --startup-project src/PureFreshMilk.Api --configuration Release --no-build
+
+      - name: Database tests (a throwaway database per test class, built from the migrations)
+        working-directory: backend
+        env:
+          ConnectionStrings__PureFreshMilkTests: Host=localhost;Port=5432;Database=purefreshmilk;Username=purefreshmilk;Password=${{ env.POSTGRES_PASSWORD }}
+        run: dotnet test --project tests/PureFreshMilk.Infrastructure.Tests --configuration Release
+
+      - name: Start the API, wait until /health/ready is healthy, then smoke-test the data endpoints
         working-directory: backend
         env:
           ConnectionStrings__PureFreshMilk: Host=localhost;Port=5432;Database=purefreshmilk;Username=purefreshmilk;Password=${{ env.POSTGRES_PASSWORD }}
           ASPNETCORE_URLS: http://127.0.0.1:5080
+          # The data endpoints exist outside Development only when switched on, until authentication exists.
+          Access__AllowUnauthenticated: "true"
         run: |
           dotnet run --project src/PureFreshMilk.Api --configuration Release --no-build --no-launch-profile > api.log 2>&1 &
+          ready=false
+          # Ready also means every migration has been applied.
           for attempt in $(seq 1 30); do
             if curl --fail --silent http://127.0.0.1:5080/health/ready; then
               echo
               echo "API is ready."
-              exit 0
+              ready=true
+              break
             fi
             sleep 2
           done
-          echo "The API did not become ready within 60 seconds."
-          cat api.log
-          exit 1
+          if [ "$ready" != true ]; then
+            echo "The API did not become ready within 60 seconds."
+            cat api.log
+            exit 1
+          fi
+          bash ../scripts/smoke-api.sh http://127.0.0.1:5080 || { cat api.log; exit 1; }
 
       - name: Stop PostgreSQL
         if: always()
