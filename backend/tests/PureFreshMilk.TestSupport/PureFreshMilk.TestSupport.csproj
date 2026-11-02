@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Fakes shared by the test projects: an in-memory stand-in for the repositories and a fixed clock.
+    A class library, not a test project, so it opts out of what tests/Directory.Build.props adds.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Remove="xunit.v3" />
+    <Using Remove="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PureFreshMilk.Application\PureFreshMilk.Application.csproj" />
+    <ProjectReference Include="..\..\src\PureFreshMilk.Domain\PureFreshMilk.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

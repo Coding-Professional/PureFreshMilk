@@ -5,8 +5,9 @@ payments and outstanding balances. This document describes how the code is organ
 that keep it that way. Decisions and their reasoning are recorded as
 [architecture decision records](decisions/README.md).
 
-**Current phase: foundation.** Only the walking skeleton exists: a status endpoint, health checks,
-an empty database context and a front-end visual prototype on synthetic demo data. See
+**Current phase: slice 1, first half.** Households, recipients and milk rates are persisted and
+served by the API, and the Recipients and Settings screens use them. Daily deliveries, billing and
+authentication do not exist yet, and Today and History still run on demo data. See
 [What is not implemented yet](#what-is-not-implemented-yet).
 
 ## System context
@@ -104,7 +105,7 @@ DTO. Business calculations belong in Domain or Application, never in an endpoint
 | Endpoint | Meaning | Checks |
 | --- | --- | --- |
 | `GET /health/live` | The process is running | None |
-| `GET /health/ready` | The API can serve traffic | PostgreSQL connection (EF Core `CanConnectAsync`) |
+| `GET /health/ready` | The API can serve traffic | PostgreSQL connection (EF Core `CanConnectAsync`) and no pending migrations |
 
 The API fails at start-up with a clear message if `ConnectionStrings:PureFreshMilk` is missing.
 
@@ -164,17 +165,19 @@ Rules:
 
 ## What is not implemented yet
 
-The model for the next slice (households, recipients, milk rates and daily deliveries) is proposed
-in [ADR 0004](decisions/0004-domain-model-for-household-deliveries.md), with the tables and the
+The model for slice 1 (households, recipients, milk rates and daily deliveries) is proposed in
+[ADR 0004](decisions/0004-domain-model-for-household-deliveries.md), with the tables and the
 invariants that need tests in [Domain model](domain-model.md) and the build order in the
-[slice 1 plan](../plans/slice-1-recipients-and-deliveries.md).
+[slice 1 plan](../plans/slice-1-recipients-and-deliveries.md). Households, recipients and milk rates
+(PR A) are built; daily deliveries (PR B) are not.
 
 | Area | State |
 | --- | --- |
-| Persistence | `PureFreshMilkDbContext` exists with no entities and no migrations. The first model is designed, not built. |
-| Recipients, deliveries, history, month view | Web screens are placeholders or demo-data prototypes. No API endpoints. |
+| Persistence | Households, recipients and milk rates are mapped, with one migration (`AddHouseholdsRecipientsAndMilkRates`). Deliveries are designed, not built. |
+| Recipients and the milk price | Built: API endpoints under `/api/v1` and the Recipients and Settings screens. Without an API address those screens show labelled demo data or say they need the API. |
+| Deliveries, Today, history, month view | Today runs on demo data, History and Month are placeholders. No delivery endpoints. |
 | Billing: prices, charges, payments, balances | Not started. Will be server-side only. Money is designed as whole paise in ADR 0004. |
-| Authentication and households | Not started. Login and sign-up are disabled previews. |
-| Household data isolation | Designed (above), not built. |
+| Authentication | Not started. Login and sign-up are disabled previews. Until it exists the data endpoints run in single-household mode with no login: they are mapped only in Development and Testing, or when `Access__AllowUnauthenticated=true` is set. |
+| Household data isolation | Designed (above). Tables carry `household_id` and the parent key that composite foreign keys will use; the query filter and the isolation tests wait for authentication. |
 | Deployment, TLS termination, forwarded headers, rate limiting | Not decided. No hosting target yet. |
 | Dark mode, localisation | Not started. |

@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using PureFreshMilk.TestSupport;
 
 namespace PureFreshMilk.Api.Tests.Features;
 

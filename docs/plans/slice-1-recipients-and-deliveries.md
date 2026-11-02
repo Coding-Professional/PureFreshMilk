@@ -1,6 +1,6 @@
 # Slice 1 plan: recipients, milk rates and daily deliveries
 
-> **Status: proposed, awaiting maintainer review.** This plan changes no code. The model it builds is
+> **Status: PR A is built (see [PR A as built](#pr-a-as-built)); PR B is not.** The model it builds is
 > described in [Domain model](../architecture/domain-model.md) and justified in
 > [ADR 0004](../architecture/decisions/0004-domain-model-for-household-deliveries.md).
 
@@ -112,9 +112,10 @@ today only because nothing is stored; PR B removes it.
   already starts.
 - **`dotnet test` stays database-free by default.** Tests that need PostgreSQL carry
   `[Trait("Category", "Database")]`, live in `PureFreshMilk.Infrastructure.Tests`, and are excluded
-  from the `api` job and from `scripts/check.*`. xUnit v3 supports trait filters; the exact option for
-  `dotnet test` on Microsoft.Testing.Platform is confirmed when PR A wires it in. The `database` job
-  runs them. A database test never skips silently: with no connection string it fails and says how
+  from the `api` job and from `scripts/check.*` with
+  `--filter-not-trait "Category=Database" --ignore-exit-code 8` (the second option because the test
+  project that holds only those tests then runs none, which Microsoft.Testing.Platform reports as exit
+  code 8). The `database` job runs them. A database test never skips silently: with no connection string it fails and says how
   to start PostgreSQL.
 - **Each database test class gets a throwaway database**, created from the migrations and dropped
   afterwards, through `ConnectionStrings__PureFreshMilkTests`.
@@ -248,6 +249,29 @@ migrations, runs them, and adds a curl smoke test with `Access__AllowUnauthentic
 `name:` changes**), `scripts/check.sh` and `scripts/check.ps1` (exclude database tests; opt in with a
 flag), `docs/development.md` (first migration, database tests, single-household mode),
 `docs/architecture/overview.md` (what now exists), and ADR 0004's status once accepted.
+
+### PR A as built
+
+What differs from the plan above:
+
+- **More than the minimum.** All routes in the PR A tables exist (including `GET /recipients/{id}`,
+  unarchive, `GET /milk-rates/in-effect`, and changing and deleting a rate). `Money` (whole paise,
+  checked arithmetic) was built here, not with billing, along with `PricePerLitre.CostOf`, which
+  rounds half-up once per line.
+- **Archive default.** With no date, a recipient is archived from today, or from the day after they
+  start if that is later. A recipient is active for at least one day, so "from today" was refused for
+  anyone who started today.
+- **Single-household mode** is switched by the environment (Development and Testing) or
+  `Access__AllowUnauthenticated=true`; `appsettings.Development.json` needed no change. Anything other
+  than exactly `true` leaves the endpoints off.
+- **Composite foreign keys** need a child table, so none exists yet. `recipients` carries the
+  `UNIQUE (household_id, id)` key they will point at; they arrive with `deliveries` in PR B.
+- **Web.** `ApiRecipient` lives in `types/api.ts` (extending `Recipient`) rather than changing
+  `types/household.ts`. Settings offers a short list of time zones. The Playwright tests run against a
+  build with no API address; the screens that use the API are covered by Vitest with mocked services,
+  and the whole path was driven once in a browser against the real API and PostgreSQL.
+- **Added to CI.** `scripts/smoke-api.sh`, run by the `database` job after the migrations are applied.
+  The readiness check now also fails while migrations are pending.
 
 ## PR B: daily deliveries and history
 

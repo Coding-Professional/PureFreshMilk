@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PureFreshMilk.Api\PureFreshMilk.Api.csproj" />
+    <ProjectReference Include="..\PureFreshMilk.TestSupport\PureFreshMilk.TestSupport.csproj" />
   </ItemGroup>
 
   <ItemGroup>
