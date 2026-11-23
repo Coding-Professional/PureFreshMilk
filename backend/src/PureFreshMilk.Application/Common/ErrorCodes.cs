@@ -13,4 +13,7 @@ public static class ErrorCodes
     public const string RateNotFound = "rate-not-found";
     public const string RateDateTaken = "rate-date-taken";
     public const string NoRateInEffect = "no-rate-in-effect";
+    public const string RecipientNotActive = "recipient-not-active";
+    public const string DeliveryDateTaken = "delivery-date-taken";
+    public const string FutureDate = "future-date";
 }

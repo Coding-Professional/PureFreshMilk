@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PureFreshMilk.Application.Common;
+using PureFreshMilk.Application.Deliveries;
 using PureFreshMilk.Application.Households;
 using PureFreshMilk.Application.Rates;
 using PureFreshMilk.Application.Recipients;
@@ -29,6 +30,7 @@ public sealed class HandlerFlowTests(PostgresDatabaseFixture database) : IClassF
         private readonly HouseholdRepository households = new(context);
         private readonly RecipientRepository recipients = new(context);
         private readonly MilkRateRepository rates = new(context);
+        private readonly DeliveryRepository deliveries = new(context);
         private readonly SingleHouseholdProvider current = new(context);
         private readonly UnitOfWork unitOfWork = new(context);
 
@@ -40,9 +42,9 @@ public sealed class HandlerFlowTests(PostgresDatabaseFixture database) : IClassF
 
         public ListRecipientsHandler ListRecipients => new(current, recipients, clock);
 
-        public UpdateRecipientHandler UpdateRecipient => new(current, recipients, unitOfWork, clock);
+        public UpdateRecipientHandler UpdateRecipient => new(current, recipients, deliveries, unitOfWork, clock);
 
-        public ArchiveRecipientHandler ArchiveRecipient => new(current, recipients, unitOfWork, clock);
+        public ArchiveRecipientHandler ArchiveRecipient => new(current, recipients, deliveries, unitOfWork, clock);
 
         public UnarchiveRecipientHandler UnarchiveRecipient => new(current, recipients, unitOfWork, clock);
 
@@ -64,7 +66,7 @@ public sealed class HandlerFlowTests(PostgresDatabaseFixture database) : IClassF
     private async Task StartEmptyAsync()
     {
         await using var context = database.CreateContext();
-        await context.Database.ExecuteSqlRawAsync("truncate table milk_rates, recipients, households", Ct);
+        await context.Database.ExecuteSqlRawAsync("truncate table deliveries, milk_rates, recipients, households", Ct);
     }
 
     private async Task SetUpHouseholdAsync()

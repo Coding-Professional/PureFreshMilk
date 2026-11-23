@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PureFreshMilk.Domain.Common;
+using PureFreshMilk.Domain.Deliveries;
 using PureFreshMilk.Domain.Households;
 using PureFreshMilk.Domain.Rates;
 using PureFreshMilk.Domain.Recipients;
@@ -17,6 +18,9 @@ internal sealed class RecipientIdConverter()
 
 internal sealed class MilkRateIdConverter()
     : ValueConverter<MilkRateId, Guid>(id => id.Value, value => MilkRateId.From(value));
+
+internal sealed class DeliveryIdConverter()
+    : ValueConverter<DeliveryId, Guid>(id => id.Value, value => DeliveryId.From(value));
 
 internal sealed class QuantityConverter()
     : ValueConverter<Quantity, int>(quantity => quantity.Millilitres, value => Quantity.FromMillilitres(value));

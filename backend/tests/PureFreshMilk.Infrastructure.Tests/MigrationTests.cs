@@ -16,6 +16,7 @@ public sealed class MigrationTests(PostgresDatabaseFixture database) : IClassFix
         var applied = await context.Database.GetAppliedMigrationsAsync(Ct);
 
         Assert.Contains(applied, name => name.EndsWith("_AddHouseholdsRecipientsAndMilkRates", StringComparison.Ordinal));
+        Assert.Contains(applied, name => name.EndsWith("_AddDeliveries", StringComparison.Ordinal));
         Assert.Empty(await context.Database.GetPendingMigrationsAsync(Ct));
         Assert.False(context.Database.HasPendingModelChanges(), "The model differs from the last migration: add a migration.");
     }
@@ -30,13 +31,21 @@ public sealed class MigrationTests(PostgresDatabaseFixture database) : IClassFix
                 """
                 select table_name || '.' || column_name || ' ' || data_type || ' ' || is_nullable as "Value"
                 from information_schema.columns
-                where table_schema = 'public' and table_name in ('households', 'recipients', 'milk_rates')
+                where table_schema = 'public' and table_name in ('households', 'recipients', 'milk_rates', 'deliveries')
                 order by 1
                 """)
             .ToListAsync(Ct);
 
         Assert.Equal(
             [
+                "deliveries.created_at timestamp with time zone NO",
+                "deliveries.delivered_ml integer NO",
+                "deliveries.delivery_date date NO",
+                "deliveries.household_id uuid NO",
+                "deliveries.id uuid NO",
+                "deliveries.recipient_id uuid NO",
+                "deliveries.status character varying NO",
+                "deliveries.updated_at timestamp with time zone NO",
                 "households.created_at timestamp with time zone NO",
                 "households.id uuid NO",
                 "households.name character varying NO",
@@ -70,7 +79,7 @@ public sealed class MigrationTests(PostgresDatabaseFixture database) : IClassFix
             .SqlQueryRaw<string>(
                 """
                 select conname as "Value" from pg_constraint
-                where conrelid in ('households'::regclass, 'recipients'::regclass, 'milk_rates'::regclass)
+                where conrelid in ('households'::regclass, 'recipients'::regclass, 'milk_rates'::regclass, 'deliveries'::regclass)
                   and contype in ('p', 'u', 'f', 'c') -- PostgreSQL 18 also lists NOT NULL ('n') here
                 order by conname
                 """)
@@ -78,13 +87,17 @@ public sealed class MigrationTests(PostgresDatabaseFixture database) : IClassFix
 
         Assert.Equal(
             [
+                "ck_deliveries_quantity",
+                "ck_deliveries_status",
                 "ck_households_name_length",
                 "ck_milk_rates_price",
                 "ck_recipients_archived_after_start",
                 "ck_recipients_expected_ml",
                 "ck_recipients_name_length",
+                "fk_deliveries_recipients_household_id_recipient_id",
                 "fk_milk_rates_households_household_id",
                 "fk_recipients_households_household_id",
+                "pk_deliveries",
                 "pk_households",
                 "pk_milk_rates",
                 "pk_recipients",
@@ -109,7 +122,7 @@ public sealed class MigrationTests(PostgresDatabaseFixture database) : IClassFix
             .ToListAsync(Ct);
 
         Assert.Equal(
-            ["fk_milk_rates_households_household_id r", "fk_recipients_households_household_id r"],
+            ["fk_deliveries_recipients_household_id_recipient_id r", "fk_milk_rates_households_household_id r", "fk_recipients_households_household_id r"],
             rules);
     }
 

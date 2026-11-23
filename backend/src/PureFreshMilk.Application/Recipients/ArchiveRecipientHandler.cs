@@ -1,5 +1,6 @@
 using System.Globalization;
 using PureFreshMilk.Application.Common;
+using PureFreshMilk.Application.Deliveries;
 using PureFreshMilk.Application.Households;
 using PureFreshMilk.Application.Persistence;
 using PureFreshMilk.Domain.Recipients;
@@ -17,6 +18,7 @@ public sealed record ArchiveRecipientCommand(Guid Id, DateOnly? ArchivedFrom);
 public sealed class ArchiveRecipientHandler(
     ICurrentHousehold currentHousehold,
     IRecipientRepository recipients,
+    IDeliveryRepository deliveries,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
 {
@@ -33,17 +35,26 @@ public sealed class ArchiveRecipientHandler(
                 $"The recipient is already archived from {archivedFrom.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}. Bring them back before archiving again.");
         }
 
-        recipient.Archive(command.ArchivedFrom ?? DefaultArchiveDate(recipient, household.Today(now)), now);
+        var latest = await deliveries.LastDateAsync(household.Id, recipient.Id, cancellationToken);
+        var from = command.ArchivedFrom ?? DefaultArchiveDate(recipient, household.Today(now), latest);
+        if (latest is { } lastDate && from <= lastDate)
+        {
+            throw new ConflictException(ErrorCodes.RecipientNotActive,
+                "The archive date must be after the latest recorded delivery.");
+        }
+
+        recipient.Archive(from, now);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return RecipientDetails.From(recipient);
     }
 
-    private static DateOnly DefaultArchiveDate(Recipient recipient, DateOnly today)
+    private static DateOnly DefaultArchiveDate(Recipient recipient, DateOnly today, DateOnly? latest)
     {
         // Not past the last representable day: the domain then rejects the date with its own message.
         var dayAfterStart = recipient.StartsOn == DateOnly.MaxValue ? recipient.StartsOn : recipient.StartsOn.AddDays(1);
 
-        return dayAfterStart > today ? dayAfterStart : today;
+        var afterLatest = latest is { } date && date < DateOnly.MaxValue ? date.AddDays(1) : today;
+        return new[] { dayAfterStart, afterLatest, today }.Max();
     }
 }
