@@ -4,9 +4,10 @@ PureFreshMilk keeps an exact record of a household's daily milk deliveries: who 
 and which mornings the milk didn't come. Monthly totals, charges, payments and outstanding
 balances come next.
 
-> **Project status: foundation.** The repository structure, architecture and tooling are in place.
-> The **Today** screen is a working visual prototype on **synthetic demo data**. Nothing is saved
-> yet, and billing, accounts and persistence are not implemented.
+> **Project status: daily recording works locally.** With the API and PostgreSQL running, you can
+> set up a household, manage recipients and milk prices, record deliveries, and review past days.
+> Without an API address, Today and Recipients show clearly labelled synthetic demo data.
+> Billing and accounts are not implemented yet.
 > See [what is not implemented yet](docs/architecture/overview.md#what-is-not-implemented-yet).
 
 ## Tech stack
@@ -54,7 +55,9 @@ npm run dev          # http://localhost:3000
 ```bash
 cp .env.example .env                 # set POSTGRES_PASSWORD
 docker compose up -d --wait          # PostgreSQL on localhost:5432
+bash scripts/migrate-db.sh           # apply both migrations (or: pwsh scripts/migrate-db.ps1)
 bash scripts/run-api.sh              # API on http://localhost:5080 (or: pwsh scripts/run-api.ps1)
+# in a second terminal:
 cd apps/web && cp .env.example .env.local && npm run dev
 ```
 

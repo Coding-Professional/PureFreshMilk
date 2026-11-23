@@ -57,7 +57,7 @@ describe("today state", () => {
 
     const tooHigh = apply(
       { type: "deliver", recipientId: "b" },
-      { type: "adjust", recipientId: "b", deltaMl: 10_000 },
+      { type: "adjust", recipientId: "b", deltaMl: 100_000 },
     );
     expect(tooHigh.entries.b?.deliveredMl).toBe(MAX_DELIVERY_ML);
   });

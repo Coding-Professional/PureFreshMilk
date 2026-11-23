@@ -1,6 +1,6 @@
 # Slice 1 plan: recipients, milk rates and daily deliveries
 
-> **Status: PR A is built (see [PR A as built](#pr-a-as-built)); PR B is not.** The model it builds is
+> **Status: PR A and PR B are built locally; PR B is on `feat/daily-deliveries`.** The model they build is
 > described in [Domain model](../architecture/domain-model.md) and justified in
 > [ADR 0004](../architecture/decisions/0004-domain-model-for-household-deliveries.md).
 

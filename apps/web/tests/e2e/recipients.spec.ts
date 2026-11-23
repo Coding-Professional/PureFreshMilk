@@ -55,7 +55,7 @@ test.describe("Settings with no API address", () => {
 
     await expect(page.getByRole("heading", { name: "API connection" })).toBeVisible();
     await expect(page.getByText(/No API address is set/)).toBeVisible();
-    await expect(page.getByText("Delivery days and pauses aren't built yet")).toBeVisible();
+    await expect(page.getByText("Delivery pauses aren't built yet")).toBeVisible();
   });
 });
 
@@ -65,7 +65,7 @@ test("the demo screens that are not built on real data say so", async ({ page })
   await expect(page.getByText(/Sample household/)).toBeVisible();
 
   await page.goto("/app/history");
-  await expect(page.getByText("History isn't built yet")).toBeVisible();
+  await expect(page.getByText("History needs saved deliveries")).toBeVisible();
 
   await page.goto("/app/month");
   await expect(page.getByText("The monthly view isn't built yet")).toBeVisible();

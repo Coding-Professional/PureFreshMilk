@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BrandMark } from "./brand";
 
 const links = [
-  { href: "/app/today", label: "Today (demo)" },
+  { href: "/app/today", label: "Today" },
   { href: "/login", label: "Log in" },
   { href: "/signup", label: "Sign up" },
 ];

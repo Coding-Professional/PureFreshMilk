@@ -12,17 +12,21 @@ export function TodaySummary({
   rows,
   summary,
   onDeliverRemaining,
+  busy = false,
+  heading = "Today's measure",
 }: {
   rows: readonly TodayRow[];
   summary: DaySummary;
   onDeliverRemaining: () => void;
+  busy?: boolean;
+  heading?: string;
 }) {
   const remaining = summary.counts.pending;
 
   return (
     <Card className="p-5 sm:p-6">
       <h2 id={SUMMARY_HEADING_ID} className="text-base font-bold">
-        Today&apos;s measure
+        {heading}
       </h2>
       <p aria-live="polite" className="mt-2 flex flex-wrap items-baseline gap-x-2 font-display">
         <span className="text-5xl font-extrabold tracking-tight tabular-nums">
@@ -36,7 +40,11 @@ export function TodaySummary({
       <DayMeasure className="mt-5" rows={rows} summary={summary} />
       <MeasureLegend counts={summary.counts} className="mt-3" />
 
-      <Button className="mt-5 w-full" disabled={remaining === 0} onClick={onDeliverRemaining}>
+      <Button
+        className="mt-5 w-full"
+        disabled={busy || remaining === 0}
+        onClick={onDeliverRemaining}
+      >
         <CheckCheck aria-hidden />
         {remaining === 0 ? "Everyone is marked" : "Mark the rest as delivered"}
       </Button>
