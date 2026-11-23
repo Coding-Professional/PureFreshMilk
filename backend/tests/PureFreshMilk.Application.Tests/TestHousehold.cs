@@ -1,3 +1,4 @@
+using PureFreshMilk.Application.Deliveries;
 using PureFreshMilk.Application.Households;
 using PureFreshMilk.Application.Rates;
 using PureFreshMilk.Application.Recipients;
@@ -22,6 +23,7 @@ internal sealed class TestHousehold
         var households = new InMemoryHouseholdRepository(Database);
         var recipients = new InMemoryRecipientRepository(Database);
         var rates = new InMemoryMilkRateRepository(Database);
+        var deliveries = new InMemoryDeliveryRepository(Database);
 
         GetHousehold = new GetHouseholdHandler(households, Clock);
         SetUpHousehold = new SetUpHouseholdHandler(households, households, Database, Clock);
@@ -29,8 +31,8 @@ internal sealed class TestHousehold
         ListRecipients = new ListRecipientsHandler(households, recipients, Clock);
         GetRecipient = new GetRecipientHandler(households, recipients);
         AddRecipient = new AddRecipientHandler(households, recipients, Database, Clock);
-        UpdateRecipient = new UpdateRecipientHandler(households, recipients, Database, Clock);
-        ArchiveRecipient = new ArchiveRecipientHandler(households, recipients, Database, Clock);
+        UpdateRecipient = new UpdateRecipientHandler(households, recipients, deliveries, Database, Clock);
+        ArchiveRecipient = new ArchiveRecipientHandler(households, recipients, deliveries, Database, Clock);
         UnarchiveRecipient = new UnarchiveRecipientHandler(households, recipients, Database, Clock);
 
         ListRates = new ListMilkRatesHandler(households, rates);
@@ -38,6 +40,12 @@ internal sealed class TestHousehold
         AddRate = new AddMilkRateHandler(households, rates, Database, Clock);
         UpdateRate = new UpdateMilkRateHandler(households, rates, Database, Clock);
         DeleteRate = new DeleteMilkRateHandler(households, rates, Database);
+
+        GetDaySheet = new GetDaySheetHandler(households, recipients, deliveries, Clock);
+        RecordDelivery = new RecordDeliveryHandler(households, recipients, deliveries, Database, Clock);
+        ClearDelivery = new ClearDeliveryHandler(households, recipients, deliveries, Database, Clock);
+        DeliverRemaining = new DeliverRemainingHandler(households, recipients, deliveries, Database, GetDaySheet, Clock);
+        ListDaySummaries = new ListDaySummariesHandler(households, recipients, deliveries, Clock);
     }
 
     public InMemoryDatabase Database { get; }
@@ -69,6 +77,12 @@ internal sealed class TestHousehold
     public UpdateMilkRateHandler UpdateRate { get; }
 
     public DeleteMilkRateHandler DeleteRate { get; }
+
+    public GetDaySheetHandler GetDaySheet { get; }
+    public RecordDeliveryHandler RecordDelivery { get; }
+    public ClearDeliveryHandler ClearDelivery { get; }
+    public DeliverRemainingHandler DeliverRemaining { get; }
+    public ListDaySummariesHandler ListDaySummaries { get; }
 
     private static CancellationToken Ct => TestContext.Current.CancellationToken;
 

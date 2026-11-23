@@ -29,6 +29,8 @@ internal sealed class UnitOfWork(PureFreshMilkDbContext context) : IUnitOfWork
                     ErrorCodes.RecipientNameTaken, "Another recipient who is not archived already has that name."),
                 MilkRateConfiguration.EffectiveFromIndexName => new ConflictException(
                     ErrorCodes.RateDateTaken, "A price already starts on that date."),
+                DeliveryConfiguration.RecipientDateIndexName => new ConflictException(
+                    ErrorCodes.DeliveryDateTaken, "A delivery was recorded for this recipient and date at the same time. Reload and retry."),
                 _ => null,
             }
             : null;

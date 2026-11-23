@@ -34,14 +34,14 @@ npm run dev
 ```
 
 Open http://localhost:3000, then **Try the demo**. With no API address the Today and Recipients
-screens show synthetic data, clearly labelled "Demo data", and save nothing. Settings says that the
-household and price settings need the API.
+screens show synthetic data, clearly labelled "Demo data", and save nothing. History explains that
+it needs saved deliveries. Settings says that the household and price settings need the API.
 
 To work on real data, run the database and the API (steps 2 and 3 below), copy
 `apps/web/.env.example` to `apps/web/.env.local` (the default points at http://localhost:5080) and
-restart `npm run dev`. Recipients and Settings (household and milk price) then use the API. If the
-API cannot be reached they say so; they never fall back to demo data silently. Today still shows
-demo data until daily deliveries are built.
+restart `npm run dev`. Recipients, Settings, Today and History then use the API. If the API cannot
+be reached they say so; they never fall back to demo data silently. Set up the household on the
+Recipients page, add recipients, then record deliveries on Today. History opens the last 30 days.
 
 ## 2. Database (PostgreSQL in Docker)
 
@@ -76,8 +76,9 @@ dotnet run --project src/PureFreshMilk.Api
 
 **C. Environment variable.** `ConnectionStrings__PureFreshMilk=<connection string>`.
 
-The database must have its tables before the API can serve data. On a new database, apply the
-migrations once (see [Database migrations](#database-migrations)).
+The database must have its tables before the API can serve data. On a new database, run
+`bash scripts/migrate-db.sh` or `pwsh scripts/migrate-db.ps1` before the API. The scripts read `.env`
+and apply only pending migrations; see [Database migrations](#database-migrations).
 
 Check it is up:
 
@@ -90,7 +91,8 @@ curl http://localhost:5080/api/v1/status   # {"service":"purefreshmilk-api","ver
 The API starts without a running database. Only `/health/ready` reports the database: it is
 `Unhealthy` while PostgreSQL is down and also while migrations are still pending.
 
-The data endpoints (`/api/v1/household`, `/recipients`, `/milk-rates`) read and write a household
+The data endpoints (`/api/v1/household`, `/recipients`, `/milk-rates`, `/day-sheets`,
+`/day-summaries` and recipient deliveries) read and write a household
 without a login, because authentication is not built yet (ADR 0004).
 They exist only in the Development and Testing environments, or when
 `Access__AllowUnauthenticated=true` is set explicitly. In any other environment they are not
@@ -142,7 +144,7 @@ npm run test:e2e                              # builds, serves on :3100, runs br
 
 Backend test projects:
 
-- `PureFreshMilk.Domain.Tests`: domain rules such as `Quantity`, `Recipient` and `RateSchedule`.
+- `PureFreshMilk.Domain.Tests`: domain rules such as `Quantity`, `Recipient`, `Delivery` and `RateSchedule`.
 - `PureFreshMilk.Application.Tests`: the use cases, against an in-memory stand-in for the database.
 - `PureFreshMilk.Api.Tests`: the HTTP pipeline in memory (status endpoint, the household, recipient
   and milk rate endpoints, health checks, Problem Details, CORS, fail-fast configuration). They need
@@ -171,8 +173,15 @@ starting the API for a smoke test (`scripts/smoke-api.sh`).
 
 ## Database migrations
 
-The first migration is `AddHouseholdsRecipientsAndMilkRates`. Apply the migrations to a new
-database before starting the API (it reports `/health/ready` as `Unhealthy` until they are applied):
+The migrations are `AddHouseholdsRecipientsAndMilkRates` and `AddDeliveries`. Apply them to a new
+database before starting the API (it reports `/health/ready` as `Unhealthy` until they are applied).
+The local helper reads `.env` and builds the connection string:
+
+```bash
+bash scripts/migrate-db.sh          # or: pwsh scripts/migrate-db.ps1
+```
+
+With a connection string already configured, run EF directly:
 
 ```bash
 cd backend

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PureFreshMilk.Application.Deliveries;
 using PureFreshMilk.Application.Households;
 using PureFreshMilk.Application.Persistence;
 using PureFreshMilk.Application.Rates;
@@ -38,6 +39,7 @@ public static class InfrastructureServiceCollectionExtensions
         services.AddScoped<IHouseholdRepository, HouseholdRepository>();
         services.AddScoped<IRecipientRepository, RecipientRepository>();
         services.AddScoped<IMilkRateRepository, MilkRateRepository>();
+        services.AddScoped<IDeliveryRepository, DeliveryRepository>();
 
         // Ready means PostgreSQL answers and every migration has been applied. Without the second part the
         // API would start and then fail every request with "relation does not exist".

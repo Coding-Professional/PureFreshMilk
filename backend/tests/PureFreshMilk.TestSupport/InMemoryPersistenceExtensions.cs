@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using PureFreshMilk.Application.Deliveries;
 using PureFreshMilk.Application.Households;
 using PureFreshMilk.Application.Persistence;
 using PureFreshMilk.Application.Rates;
@@ -22,6 +23,7 @@ public static class InMemoryPersistenceExtensions
         services.RemoveAll<ICurrentHousehold>();
         services.RemoveAll<IRecipientRepository>();
         services.RemoveAll<IMilkRateRepository>();
+        services.RemoveAll<IDeliveryRepository>();
         services.RemoveAll<IUnitOfWork>();
 
         services.AddSingleton(database);
@@ -30,6 +32,7 @@ public static class InMemoryPersistenceExtensions
         services.AddSingleton<ICurrentHousehold>(households);
         services.AddSingleton<IRecipientRepository>(new InMemoryRecipientRepository(database));
         services.AddSingleton<IMilkRateRepository>(new InMemoryMilkRateRepository(database));
+        services.AddSingleton<IDeliveryRepository>(new InMemoryDeliveryRepository(database));
 
         return database;
     }

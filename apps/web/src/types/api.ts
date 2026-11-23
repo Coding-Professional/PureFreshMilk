@@ -58,3 +58,33 @@ export interface ApiMilkRate {
   /** The price of one litre, in whole paise. */
   pricePerLitrePaise: number;
 }
+
+export type ApiDeliveryStatus = "delivered" | "missed" | "notRecorded";
+
+export interface ApiDayRow {
+  recipientId: string;
+  name: string;
+  expectedMl: number;
+  status: ApiDeliveryStatus;
+  deliveredMl: number;
+}
+
+export interface ApiDayTotals {
+  expectedMl: number;
+  deliveredMl: number;
+  delivered: number;
+  missed: number;
+  notRecorded: number;
+}
+
+export interface ApiDaySheet {
+  date: string;
+  isToday: boolean;
+  rows: ApiDayRow[];
+  totals: ApiDayTotals;
+}
+
+export interface ApiDaySummary {
+  date: string;
+  totals: ApiDayTotals;
+}

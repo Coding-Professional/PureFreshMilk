@@ -27,7 +27,7 @@ export default function SignupPage() {
               href="/app/today"
               className="font-semibold text-accent underline-offset-4 hover:underline"
             >
-              try the Today screen with demo data
+              open the Today screen
             </Link>
           </p>
         </>

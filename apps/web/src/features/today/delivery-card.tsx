@@ -14,10 +14,18 @@ interface DeliveryCardProps {
   onMiss: () => void;
   onClear: () => void;
   onAdjust: (deltaMl: number) => void;
+  disabled?: boolean;
 }
 
 /** One recipient's delivery for today: delivered or missed, and how much arrived. */
-export function DeliveryCard({ row, onDeliver, onMiss, onClear, onAdjust }: DeliveryCardProps) {
+export function DeliveryCard({
+  row,
+  onDeliver,
+  onMiss,
+  onClear,
+  onAdjust,
+  disabled = false,
+}: DeliveryCardProps) {
   const { recipient, marker, entry } = row;
   const headingId = useId();
 
@@ -46,6 +54,7 @@ export function DeliveryCard({ row, onDeliver, onMiss, onClear, onAdjust }: Deli
             tone="delivered"
             recipientName={recipient.name}
             pressed={entry.status === "delivered"}
+            disabled={disabled}
             onClick={entry.status === "delivered" ? onClear : onDeliver}
           />
           <StatusToggle
@@ -54,6 +63,7 @@ export function DeliveryCard({ row, onDeliver, onMiss, onClear, onAdjust }: Deli
             tone="missed"
             recipientName={recipient.name}
             pressed={entry.status === "missed"}
+            disabled={disabled}
             onClick={entry.status === "missed" ? onClear : onMiss}
           />
         </div>
@@ -64,6 +74,7 @@ export function DeliveryCard({ row, onDeliver, onMiss, onClear, onAdjust }: Deli
             deliveredMl={entry.deliveredMl}
             differenceMl={row.differenceMl}
             onAdjust={onAdjust}
+            disabled={disabled}
           />
         ) : null}
       </article>
@@ -83,6 +94,7 @@ function StatusToggle({
   recipientName,
   pressed,
   onClick,
+  disabled,
 }: {
   label: string;
   icon: LucideIcon;
@@ -90,6 +102,7 @@ function StatusToggle({
   recipientName: string;
   pressed: boolean;
   onClick: () => void;
+  disabled: boolean;
 }) {
   return (
     <button
@@ -98,6 +111,7 @@ function StatusToggle({
       aria-label={`${label} for ${recipientName}`}
       aria-pressed={pressed}
       onClick={onClick}
+      disabled={disabled}
       className={cn(
         "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 px-3 font-semibold transition-colors",
         pressed ? pressedStyles[tone] : "border-line bg-surface text-ink hover:border-line-strong",
@@ -114,11 +128,13 @@ function QuantityStepper({
   deliveredMl,
   differenceMl,
   onAdjust,
+  disabled,
 }: {
   recipientName: string;
   deliveredMl: number;
   differenceMl: number;
   onAdjust: (deltaMl: number) => void;
+  disabled: boolean;
 }) {
   const step = formatQuantity(QUANTITY_STEP_ML);
 
@@ -137,7 +153,7 @@ function QuantityStepper({
             variant="secondary"
             size="icon"
             aria-label={`${step} less`}
-            disabled={deliveredMl <= QUANTITY_STEP_ML}
+            disabled={disabled || deliveredMl <= QUANTITY_STEP_ML}
             onClick={() => onAdjust(-QUANTITY_STEP_ML)}
           >
             <Minus aria-hidden />
@@ -149,7 +165,7 @@ function QuantityStepper({
             variant="secondary"
             size="icon"
             aria-label={`${step} more`}
-            disabled={deliveredMl >= MAX_DELIVERY_ML}
+            disabled={disabled || deliveredMl >= MAX_DELIVERY_ML}
             onClick={() => onAdjust(QUANTITY_STEP_ML)}
           >
             <Plus aria-hidden />

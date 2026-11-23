@@ -18,6 +18,13 @@ internal sealed class ApplicationExceptionHandler(IProblemDetailsService problem
     {
         var problem = exception switch
         {
+            FutureDateException future => new ValidationProblemDetails(
+                new Dictionary<string, string[]> { [future.Field!] = [future.Message] })
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "A future date cannot be requested.",
+                Extensions = { ["code"] = ErrorCodes.FutureDate },
+            },
             DomainException { Field: { } field } domain => new ValidationProblemDetails(
                 new Dictionary<string, string[]> { [field] = [domain.Message] })
             {

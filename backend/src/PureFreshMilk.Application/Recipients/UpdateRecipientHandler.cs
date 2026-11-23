@@ -1,3 +1,5 @@
+using PureFreshMilk.Application.Common;
+using PureFreshMilk.Application.Deliveries;
 using PureFreshMilk.Application.Households;
 using PureFreshMilk.Application.Persistence;
 using PureFreshMilk.Domain.Recipients;
@@ -10,6 +12,7 @@ public sealed record UpdateRecipientCommand(Guid Id, string? Name, int ExpectedM
 public sealed class UpdateRecipientHandler(
     ICurrentHousehold currentHousehold,
     IRecipientRepository recipients,
+    IDeliveryRepository deliveries,
     IUnitOfWork unitOfWork,
     TimeProvider timeProvider)
 {
@@ -17,6 +20,12 @@ public sealed class UpdateRecipientHandler(
     {
         var household = await currentHousehold.RequireAsync(cancellationToken);
         var recipient = await RecipientRules.RequireAsync(recipients, household.Id, command.Id, cancellationToken);
+        var earliest = await deliveries.FirstDateAsync(household.Id, recipient.Id, cancellationToken);
+        if (earliest is { } firstDate && command.StartsOn > firstDate)
+        {
+            throw new ConflictException(ErrorCodes.RecipientNotActive,
+                "The start date cannot be moved after the first recorded delivery.");
+        }
 
         // Look for a clash before changing anything, so a rejected request leaves the recipient as it was.
         var name = Recipient.NormalizeName(command.Name);

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PureFreshMilk.Domain.Common;
+using PureFreshMilk.Domain.Deliveries;
 using PureFreshMilk.Domain.Households;
 using PureFreshMilk.Domain.Rates;
 using PureFreshMilk.Domain.Recipients;
@@ -21,11 +22,14 @@ internal sealed class PureFreshMilkDbContext(DbContextOptions<PureFreshMilkDbCon
 
     public DbSet<MilkRate> MilkRates => Set<MilkRate>();
 
+    public DbSet<Delivery> Deliveries => Set<Delivery>();
+
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<HouseholdId>().HaveConversion<HouseholdIdConverter>();
         configurationBuilder.Properties<RecipientId>().HaveConversion<RecipientIdConverter>();
         configurationBuilder.Properties<MilkRateId>().HaveConversion<MilkRateIdConverter>();
+        configurationBuilder.Properties<DeliveryId>().HaveConversion<DeliveryIdConverter>();
         configurationBuilder.Properties<Quantity>().HaveConversion<QuantityConverter>();
         configurationBuilder.Properties<PricePerLitre>().HaveConversion<PricePerLitreConverter>();
     }

@@ -5,9 +5,9 @@ payments and outstanding balances. This document describes how the code is organ
 that keep it that way. Decisions and their reasoning are recorded as
 [architecture decision records](decisions/README.md).
 
-**Current phase: slice 1, first half.** Households, recipients and milk rates are persisted and
-served by the API, and the Recipients and Settings screens use them. Daily deliveries, billing and
-authentication do not exist yet, and Today and History still run on demo data. See
+**Current phase: slice 1.** Households, recipients, milk rates and daily deliveries are persisted and
+served by the API. Recipients, Settings, Today and History use them when configured. Billing and
+authentication do not exist yet. See
 [What is not implemented yet](#what-is-not-implemented-yet).
 
 ## System context
@@ -116,10 +116,10 @@ The API fails at start-up with a clear message if `ConnectionStrings:PureFreshMi
   Api response records by hand. There is deliberately no shared .NET/TypeScript package.
   Generating the client from the OpenAPI document (`/openapi/v1.json` in Development) is an
   option for later.
-- **Server-authoritative calculations.** Delivered quantities, charges, payments and balances
-  are calculated by the API. The web app displays results; it never computes a bill.
-  The Today prototype sums demo quantities on the client only because nothing is persisted yet.
-  This is marked in `features/today/today-state.ts`.
+- **Server-authoritative calculations.** Saved day sheets and their totals come from the API. The
+  web app computes a temporary total while a delivery request is pending, then replaces it with
+  the server result. Charges, payments and balances will also be server-side when built. The
+  clearly labelled Today demo still sums synthetic quantities on the client.
 - **Quantities** are whole millilitres everywhere: Domain `Quantity`, database columns, DTOs and
   the web app. There is no floating-point volume arithmetic ([ADR 0002](decisions/0002-quantities-in-whole-millilitres.md)).
 - **Household isolation (planned).** Every household-owned row will carry a `HouseholdId`. The
@@ -168,14 +168,13 @@ Rules:
 The model for slice 1 (households, recipients, milk rates and daily deliveries) is proposed in
 [ADR 0004](decisions/0004-domain-model-for-household-deliveries.md), with the tables and the
 invariants that need tests in [Domain model](domain-model.md) and the build order in the
-[slice 1 plan](../plans/slice-1-recipients-and-deliveries.md). Households, recipients and milk rates
-(PR A) are built; daily deliveries (PR B) are not.
+[slice 1 plan](../plans/slice-1-recipients-and-deliveries.md). Both implementation branches exist locally.
 
 | Area | State |
 | --- | --- |
-| Persistence | Households, recipients and milk rates are mapped, with one migration (`AddHouseholdsRecipientsAndMilkRates`). Deliveries are designed, not built. |
+| Persistence | Households, recipients, milk rates and deliveries are mapped, with two explicit migrations. |
 | Recipients and the milk price | Built: API endpoints under `/api/v1` and the Recipients and Settings screens. Without an API address those screens show labelled demo data or say they need the API. |
-| Deliveries, Today, history, month view | Today runs on demo data, History and Month are placeholders. No delivery endpoints. |
+| Deliveries, Today, history, month view | Delivery endpoints and the connected Today and History screens work. Without an API address Today stays a labelled demo. Month remains a placeholder. |
 | Billing: prices, charges, payments, balances | Not started. Will be server-side only. Money is designed as whole paise in ADR 0004. |
 | Authentication | Not started. Login and sign-up are disabled previews. Until it exists the data endpoints run in single-household mode with no login: they are mapped only in Development and Testing, or when `Access__AllowUnauthenticated=true` is set. |
 | Household data isolation | Designed (above). Tables carry `household_id` and the parent key that composite foreign keys will use; the query filter and the isolation tests wait for authentication. |

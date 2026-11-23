@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { TodayScreen } from "@/features/today/today-screen";
+import { ConnectedDayScreen } from "@/features/today/connected-day-screen";
 import { DEMO_RECIPIENTS } from "@/lib/demo-household";
+import { getApiBaseUrl } from "@/services/api-client";
 
 export const metadata: Metadata = { title: "Today" };
 
-// Demo data for now. When persistence lands, this page will load the household's
-// recipients and today's entries from the API instead.
+// Without an API address, the explicitly labelled demo remains available.
 export default function TodayPage() {
-  return <TodayScreen recipients={DEMO_RECIPIENTS} />;
+  return getApiBaseUrl() ? (
+    <ConnectedDayScreen date="today" />
+  ) : (
+    <TodayScreen recipients={DEMO_RECIPIENTS} />
+  );
 }

@@ -1,4 +1,5 @@
 using PureFreshMilk.Application.Persistence;
+using PureFreshMilk.Domain.Deliveries;
 using PureFreshMilk.Domain.Households;
 using PureFreshMilk.Domain.Rates;
 using PureFreshMilk.Domain.Recipients;
@@ -20,6 +21,7 @@ public sealed class InMemoryDatabase : IUnitOfWork
     public List<Recipient> Recipients { get; } = [];
 
     public List<MilkRate> MilkRates { get; } = [];
+    public List<Delivery> Deliveries { get; } = [];
 
     /// <summary>How many times <see cref="SaveChangesAsync"/> has been called.</summary>
     public int SaveCount { get; private set; }
@@ -45,6 +47,7 @@ public sealed class InMemoryDatabase : IUnitOfWork
         Households.Clear();
         Recipients.Clear();
         MilkRates.Clear();
+        Deliveries.Clear();
         pendingChanges.Clear();
         SaveCount = 0;
     }

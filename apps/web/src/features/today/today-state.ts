@@ -4,13 +4,12 @@ import type { DeliveryEntry, DeliveryStatus, Recipient } from "@/types/household
 /**
  * Client-side state for the Today prototype.
  *
- * PROTOTYPE ONLY: these totals are display arithmetic over in-memory demo data.
- * Once deliveries are persisted, the API is the source of truth for quantities,
- * charges and balances; the UI will render what the server returns.
+ * DEMO MODE ONLY: these totals are display arithmetic over in-memory synthetic data.
+ * ConnectedDayScreen uses the API's saved day sheets and totals.
  */
 
 export const QUANTITY_STEP_ML = 250;
-export const MAX_DELIVERY_ML = 5000;
+export const MAX_DELIVERY_ML = 20_000;
 
 export interface TodayState {
   recipients: readonly Recipient[];

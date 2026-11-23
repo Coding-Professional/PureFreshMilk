@@ -1,3 +1,4 @@
+using PureFreshMilk.Api.Features.Deliveries;
 using PureFreshMilk.Api.Features.Households;
 using PureFreshMilk.Api.Features.MilkRates;
 using PureFreshMilk.Api.Features.Recipients;
@@ -46,6 +47,8 @@ if (UnauthenticatedAccess.IsAllowed(app.Environment, app.Configuration))
     api.MapHouseholdEndpoints();
     api.MapRecipientEndpoints();
     api.MapMilkRateEndpoints();
+    api.MapDeliveryEndpoints();
+    api.MapDaySheetEndpoints();
 }
 
 app.Run();

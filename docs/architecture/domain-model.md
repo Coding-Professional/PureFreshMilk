@@ -106,6 +106,7 @@ The diagram cannot show composite keys, checks or indexes, so they are listed he
 | `deliveries` | `FK (household_id, recipient_id) → recipients (household_id, id)`, `ON DELETE RESTRICT` | A delivery cannot point at another household's recipient. |
 | `deliveries` | `UNIQUE (recipient_id, delivery_date)` | One delivery per recipient per day. Also serves per-recipient date ranges. |
 | `deliveries` | `INDEX (household_id, delivery_date)` | The day sheet and every history range filter on exactly these two columns. |
+| `deliveries` | `INDEX (household_id, recipient_id)` | EF Core adds this index for the composite foreign key. |
 | `deliveries` | `CHECK (status IN ('delivered', 'missed'))` | Status as text, readable in SQL. |
 | `deliveries` | `CHECK ((status = 'delivered' AND delivered_ml BETWEEN 1 AND 20000) OR (status = 'missed' AND delivered_ml = 0))` | The quantity matches the status. |
 

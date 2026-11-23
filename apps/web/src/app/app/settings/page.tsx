@@ -15,9 +15,9 @@ export default function SettingsPage() {
         <HouseholdSettings />
         <PlaceholderPanel
           icon={CalendarOff}
-          title="Delivery days and pauses aren't built yet"
+          title="Delivery pauses aren't built yet"
           description="This is where days without deliveries, such as a trip away, will be managed."
-          planned={["Delivery days and pauses"]}
+          planned={["Delivery pauses"]}
         />
         <ApiStatusCard />
       </div>

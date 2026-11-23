@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using PureFreshMilk.Application.Deliveries;
 using PureFreshMilk.Application.Households;
 using PureFreshMilk.Application.Rates;
 using PureFreshMilk.Application.Recipients;
@@ -34,6 +35,12 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<AddMilkRateHandler>();
         services.AddScoped<UpdateMilkRateHandler>();
         services.AddScoped<DeleteMilkRateHandler>();
+
+        services.AddScoped<GetDaySheetHandler>();
+        services.AddScoped<RecordDeliveryHandler>();
+        services.AddScoped<ClearDeliveryHandler>();
+        services.AddScoped<DeliverRemainingHandler>();
+        services.AddScoped<ListDaySummariesHandler>();
 
         return services;
     }
